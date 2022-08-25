@@ -1,9 +1,12 @@
 <template>
     <div class="bg-[#03061f] flex flex-col h-screen">
         <div class="flex bg-[#03061f] justify-end content-center">
-            <div class="text-lg text-white m-8" v-if="user">Hello {{ user }}</div>
-            <div v-else class="text-lg text-white m-8">Please log in</div>
-            <button @click="signIn" class="bg-red-800 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Log in</button>
+            <div v-if="user">
+                <button @click="logOut" class="bg-red-800 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Log out</button>
+            </div>
+            <div v-else>
+                <button @click="logIn" class="bg-red-800 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Log in</button>
+            </div>
             <button @click="toggle" class="sm:hidden bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Switch views</button>
             <button class="bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 text-white text-lg px-4 py-2 font-bold rounded-lg m-8">Publish</button>
         </div>
@@ -21,7 +24,7 @@
 <script lang="ts" setup>
 import { marked } from "marked";
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, setPersistence, inMemoryPersistence } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 
 // Markdown parse
 const text = ref("# Bonjour\n\nSome reasons why markdown is **awesome**:\n\n- easy to write,\n- easy to *style*.");
@@ -53,33 +56,37 @@ auth.languageCode = "fr";
 const provider = new GoogleAuthProvider();
 const user = ref(null);
 
-function signIn() {
-    setPersistence(auth, inMemoryPersistence)
+onAuthStateChanged(auth, (user2) => {
+    if (user2) {
+        user.value = user2;
+        console.log("Logged in");
+    } else {
+        user.value = null;
+        console.log("Logged out");
+    }
+});
+
+function logOut() {
+    signOut(auth)
         .then(() => {
-            const provider = new GoogleAuthProvider();
-            // In memory persistence will be applied to the signed in Google user
-            // even though the persistence was set to 'none' and a page redirect
-            // occurred.
-            return signInWithPopup(auth, provider).then((result) => {
-                user.value = result.user;
-            });
+            // Sign-out successful.
+        })
+        .catch((error) => {
+            // An error happened.
+        });
+}
+
+function logIn() {
+    signInWithPopup(auth, provider)
+        .then((result) => {
+            user.value = result.user;
         })
         .catch((error) => {
             // Handle Errors here.
             const errorCode = error.code;
             const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
         });
-
-    // signInWithPopup(auth, provider)
-    //     .then((result) => {
-    //         user.value = result.user;
-    //     })
-    //     .catch((error) => {
-    //         // Handle Errors here.
-    //         const errorCode = error.code;
-    //         const errorMessage = error.message;
-    //         console.log(errorCode, errorMessage);
-    //     });
 }
 </script>
 
