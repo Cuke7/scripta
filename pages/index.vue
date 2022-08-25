@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 import { marked } from "marked";
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, setPersistence, inMemoryPersistence } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, setPersistence, inMemoryPersistence } from "firebase/auth";
 
 // Markdown parse
 const text = ref("# Bonjour\n\nSome reasons why markdown is **awesome**:\n\n- easy to write,\n- easy to *style*.");
@@ -54,16 +54,32 @@ const provider = new GoogleAuthProvider();
 const user = ref(null);
 
 function signIn() {
-    signInWithPopup(auth, provider)
-        .then((result) => {
-            user.value = result.user;
+    setPersistence(auth, inMemoryPersistence)
+        .then(() => {
+            const provider = new GoogleAuthProvider();
+            // In memory persistence will be applied to the signed in Google user
+            // even though the persistence was set to 'none' and a page redirect
+            // occurred.
+            return signInWithPopup(auth, provider).then((result) => {
+                user.value = result.user;
+            });
         })
         .catch((error) => {
             // Handle Errors here.
             const errorCode = error.code;
             const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
         });
+
+    // signInWithPopup(auth, provider)
+    //     .then((result) => {
+    //         user.value = result.user;
+    //     })
+    //     .catch((error) => {
+    //         // Handle Errors here.
+    //         const errorCode = error.code;
+    //         const errorMessage = error.message;
+    //         console.log(errorCode, errorMessage);
+    //     });
 }
 </script>
 
