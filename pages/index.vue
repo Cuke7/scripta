@@ -1,21 +1,21 @@
 <template>
     <div class="bg-[#03061f] flex flex-col h-screen">
-        <div class="flex bg-[#03061f] justify-end content-center">
+        <div class="flex bg-[#03061f] justify-around content-center">
             <div v-if="user">
                 <button @click="logOut" class="bg-red-800 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Log out</button>
             </div>
             <div v-else>
                 <button @click="logIn" class="bg-red-800 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Log in</button>
             </div>
-            <button @click="toggle" class="sm:hidden bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Switch views</button>
-            <button class="bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 text-white text-lg px-4 py-2 font-bold rounded-lg m-8">Publish</button>
+            <button @click="toggle" class="sm:hidden bg-gradient-to-r from-green-400 to-blue-500 sm:hover:from-pink-500 sm:hover:to-yellow-500 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Switch views</button>
+            <button class="bg-gradient-to-r from-green-400 to-blue-500 sm:hover:from-pink-500 sm:hover:to-yellow-500 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Publish</button>
         </div>
-        <div class="flex-1 w-full flex p-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500">
+        <div class="flex-1 w-full flex mb-2 sm:p-2 sm:mb-0 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500">
             <div ref="editor" class="h-full pr-[2px] sm:w-1/2 sm:block w-full">
-                <textarea class="h-full w-full bg-[#03061f] text-white p-16 text-lg overscroll-contain" v-model="text" />
+                <textarea class="h-full w-full bg-[#03061f] text-white p-4 sm:p-16 text-lg overscroll-contain" v-model="text" />
             </div>
             <div ref="render" class="h-full pl-[2px] hidden sm:w-1/2 sm:block w-full">
-                <div class="bg-[#03061f] p-16 prose prose-lg prose-invert max-w-none w-full h-full overscroll-contain" v-html="html"></div>
+                <div class="bg-[#03061f] p-4 sm:p-16 prose prose-lg prose-invert max-w-none w-full h-full overscroll-contain" v-html="html"></div>
             </div>
         </div>
     </div>
@@ -107,7 +107,8 @@ function logIn() {
     background: #555;
 }
 
-textarea {
+textarea:focus {
     resize: none;
+    outline: none;
 }
 </style>
