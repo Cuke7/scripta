@@ -1,48 +1,70 @@
 <template>
-    <!-- <div class="bg-[#03061f] flex justify-end content-center">
-            <button class="bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 text-white text-lg px-4 py-2 font-bold rounded-lg m-8">Publish</button>
-        </div>
-        <div class="flex bg-red-400">
-            <Editor />
-            <Render />
-        </div> -->
-    <!-- <div class="bg-red-400 w-screen h-screen flex-col">
-        <div class="bg-[#03061f] flex justify-end content-center h-32">
-            <button class="bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 text-white text-lg px-4 py-2 font-bold rounded-lg m-8">Publish</button>
-        </div>
-        <div class="bg-green-400 w- h-full flex-1">
-            test
-        </div>
-    </div> -->
     <div class="bg-[#03061f] flex flex-col h-screen">
         <div class="flex bg-[#03061f] justify-end content-center">
+            <div class="text-lg text-white m-8" v-if="user">Hello {{ user }}</div>
+            <div v-else class="text-lg text-white m-8">Please log in</div>
+            <button @click="signIn" class="bg-red-800 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Log in</button>
+            <button @click="toggle" class="sm:hidden bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Switch views</button>
             <button class="bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 text-white text-lg px-4 py-2 font-bold rounded-lg m-8">Publish</button>
         </div>
         <div class="flex-1 w-full flex p-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500">
-            <Editor />
-            <Render />
-            <!-- <div class="bg-blue-400 h-full w-1/2 p-2">test</div>
-            <div class="bg-blue-400 h-full w-1/2 p-2">test</div> -->
+            <div ref="editor" class="h-full pr-[2px] sm:w-1/2 sm:block w-full">
+                <textarea class="h-full w-full bg-[#03061f] text-white p-16 text-lg overscroll-contain" v-model="text" />
+            </div>
+            <div ref="render" class="h-full pl-[2px] hidden sm:w-1/2 sm:block w-full">
+                <div class="bg-[#03061f] p-16 prose prose-lg prose-invert max-w-none w-full h-full overscroll-contain" v-html="html"></div>
+            </div>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-// import { initializeApp } from "firebase/app";
-// import { getDatabase, ref, set } from "firebase/database";
-// const firebaseConfig = {
-//     apiKey: "AIzaSyD7s3E9-BLTfiX-knOrbnVt-uIowXkoLfY",
-//     authDomain: "mdtor-7e804.firebaseapp.com",
-//     projectId: "mdtor-7e804",
-//     storageBucket: "mdtor-7e804.appspot.com",
-//     messagingSenderId: "265431773947",
-//     appId: "1:265431773947:web:ccce8930e698b90472365e",
-//     databaseURL: "https://mdtor-7e804-default-rtdb.europe-west1.firebasedatabase.app",
-// };
+import { marked } from "marked";
+import { initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider, signInWithPopup, setPersistence, inMemoryPersistence } from "firebase/auth";
 
-// // Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-// const database = getDatabase(app);
+// Markdown parse
+const text = ref("# Bonjour\n\nSome reasons why markdown is **awesome**:\n\n- easy to write,\n- easy to *style*.");
+const html = computed(() => {
+    return marked.parse(text.value);
+});
+const render = ref(null);
+const editor = ref(null);
+function toggle() {
+    editor.value.classList.toggle("hidden");
+    render.value.classList.toggle("hidden");
+}
+
+const firebaseConfig = {
+    apiKey: "AIzaSyD7s3E9-BLTfiX-knOrbnVt-uIowXkoLfY",
+    authDomain: "mdtor-7e804.firebaseapp.com",
+    databaseURL: "https://mdtor-7e804-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "mdtor-7e804",
+    storageBucket: "mdtor-7e804.appspot.com",
+    messagingSenderId: "265431773947",
+    appId: "1:265431773947:web:ccce8930e698b90472365e",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+// Initialize Firebase Authentication and get a reference to the service
+const auth = getAuth(app);
+auth.languageCode = "fr";
+const provider = new GoogleAuthProvider();
+const user = ref(null);
+
+function signIn() {
+    signInWithPopup(auth, provider)
+        .then((result) => {
+            user.value = result.user;
+        })
+        .catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+        });
+}
 </script>
 
 <style>
@@ -60,5 +82,9 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+textarea {
+    resize: none;
 }
 </style>
