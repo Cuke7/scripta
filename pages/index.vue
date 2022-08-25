@@ -11,10 +11,10 @@
             <button class="bg-gradient-to-r from-green-400 to-blue-500 sm:hover:from-pink-500 sm:hover:to-yellow-500 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Publish</button>
         </div>
         <div class="flex-1 w-full flex mb-2 sm:p-2 sm:mb-0 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500">
-            <div ref="editor" class="h-full pr-[2px] sm:w-1/2 sm:block w-full">
+            <div ref="editor" class="h-full sm:pr-[2px] sm:w-1/2 sm:block w-full">
                 <textarea class="h-full w-full bg-[#03061f] text-white p-4 sm:p-16 text-lg overscroll-contain" v-model="text" />
             </div>
-            <div ref="render" class="h-full pl-[2px] hidden sm:w-1/2 sm:block w-full">
+            <div ref="render" class="h-full sm:pl-[2px] hidden sm:w-1/2 sm:block w-full">
                 <div class="bg-[#03061f] p-4 sm:p-16 prose prose-lg prose-invert max-w-none w-full h-full overscroll-contain" v-html="html"></div>
             </div>
         </div>
