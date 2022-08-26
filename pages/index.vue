@@ -14,7 +14,7 @@
         <!-- <div class="flex-1 w-full flex p-8"> -->
         <div class="flex-1 w-full flex mb-2 bg-gradient-to-r from-green-400 to-blue-500">
             <div ref="editor" class="mr-[1px] mt-[2px] h-full sm:w-1/2 sm:block w-full">
-                <textarea class="h-full w-full bg-[#03061f] text-white p-8 sm:p-16 text-lg overscroll-contain" v-model="text" />
+                <textarea class="h-full w-full bg-[#03061f] text-white p-8 sm:p-16 text-lg overscroll-contain" v-model="text"></textarea>
             </div>
             <div ref="render" class="ml-[1px] mt-[2px] h-full hidden sm:w-1/2 sm:block w-full">
                 <div class="bg-[#03061f] p-8 sm:p-16 prose prose-lg prose-invert max-w-none w-full h-full overscroll-contain" v-html="html"></div>
