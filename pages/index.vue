@@ -1,21 +1,23 @@
 <template>
     <div class="bg-[#03061f] flex flex-col h-screen">
-        <div class="flex bg-[#03061f] justify-around content-center">
+        <div class="flex bg-[#03061f] justify-end content-center">
+            <button @click="toggle" class="sm:hidden bg-gradient-to-r from-green-400 to-blue-500 sm:hover:from-pink-500 sm:hover:to-yellow-500 text-white text-base px-4 py-2 font-bold rounded-lg my-8">Switch views</button>
+
             <div v-if="user">
-                <button @click="logOut" class="bg-red-800 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Log out</button>
+                <button @click="logOut" class="m-8 bg-red-800 text-white text-base px-4 py-2 font-bold rounded-lg">Log out</button>
             </div>
             <div v-else>
-                <button @click="logIn" class="bg-red-800 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Log in</button>
+                <button @click="logIn" class="m-8 bg-red-800 text-white text-base px-4 py-2 font-bold rounded-lg">Log in with Google</button>
             </div>
-            <button @click="toggle" class="sm:hidden bg-gradient-to-r from-green-400 to-blue-500 sm:hover:from-pink-500 sm:hover:to-yellow-500 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Switch views</button>
-            <button class="bg-gradient-to-r from-green-400 to-blue-500 sm:hover:from-pink-500 sm:hover:to-yellow-500 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Publish</button>
+            <!-- <button class="bg-gradient-to-r from-green-400 to-blue-500 sm:hover:from-pink-500 sm:hover:to-yellow-500 text-white text-lg px-4 py-2 font-bold rounded-lg my-8">Publish</button> -->
         </div>
-        <div class="flex-1 w-full flex mb-2 sm:p-2 sm:mb-0 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500">
-            <div ref="editor" class="h-full sm:pr-[2px] sm:w-1/2 sm:block w-full">
-                <textarea class="h-full w-full bg-[#03061f] text-white p-4 sm:p-16 text-lg overscroll-contain" v-model="text" />
+        <!-- <div class="flex-1 w-full flex p-8"> -->
+        <div class="flex-1 w-full flex mb-2 bg-gradient-to-r from-green-400 to-blue-500">
+            <div ref="editor" class="mr-[1px] mt-[2px] h-full sm:w-1/2 sm:block w-full">
+                <textarea class="h-full w-full bg-[#03061f] text-white p-8 sm:p-16 text-lg overscroll-contain" v-model="text" />
             </div>
-            <div ref="render" class="h-full sm:pl-[2px] hidden sm:w-1/2 sm:block w-full">
-                <div class="bg-[#03061f] p-4 sm:p-16 prose prose-lg prose-invert max-w-none w-full h-full overscroll-contain" v-html="html"></div>
+            <div ref="render" class="ml-[1px] mt-[2px] h-full hidden sm:w-1/2 sm:block w-full">
+                <div class="bg-[#03061f] p-8 sm:p-16 prose prose-lg prose-invert max-w-none w-full h-full overscroll-contain" v-html="html"></div>
             </div>
         </div>
     </div>
@@ -27,7 +29,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 
 // Markdown parse
-const text = ref("# Bonjour\n\nSome reasons why markdown is **awesome**:\n\n- easy to write,\n- easy to *style*.");
+const text = ref("# Hello\n\nSome reasons why markdown is **awesome**:\n\n- easy to write,\n- easy to *style*.");
 const html = computed(() => {
     return marked.parse(text.value);
 });
@@ -106,7 +108,7 @@ function logIn() {
     background: #555;
 }
 
-textarea:focus {
+textarea {
     resize: none;
     outline: none;
 }
