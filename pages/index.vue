@@ -39,13 +39,12 @@ function toggle() {
 }
 
 const firebaseConfig = {
-    apiKey: "AIzaSyD7s3E9-BLTfiX-knOrbnVt-uIowXkoLfY",
-    authDomain: "mdtor-7e804.firebaseapp.com",
-    databaseURL: "https://mdtor-7e804-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "mdtor-7e804",
-    storageBucket: "mdtor-7e804.appspot.com",
-    messagingSenderId: "265431773947",
-    appId: "1:265431773947:web:ccce8930e698b90472365e",
+    apiKey: "AIzaSyCpDieJh7SInMrISXMFFO7xoUIM4Dzg5dA",
+    authDomain: "scoriae.firebaseapp.com",
+    projectId: "scoriae",
+    storageBucket: "scoriae.appspot.com",
+    messagingSenderId: "107441951302",
+    appId: "1:107441951302:web:e8d88f5f6f731817c6f047",
 };
 
 // Initialize Firebase
