@@ -15,7 +15,10 @@
                 <Icon class="mx-4 my-auto"></Icon>
                 <div class="text-white text-xl my-auto">My note</div>
             </div>
-            <button class="mr-4 sm:mr-8 bg-gradient-to-r from-green-400 to-blue-500 sm:hover:from-pink-500 sm:hover:to-yellow-500 text-white px-4 py-2 font-bold rounded-lg">Publish</button>
+            <button @click="writeUserData" class="mr-4 sm:mr-8 bg-gradient-to-r from-green-400 to-blue-500 sm:hover:from-pink-500 sm:hover:to-yellow-500 text-white px-4 py-2 font-bold rounded-lg">
+                <span v-if="saved">Saved</span>
+                <span v-else>Save</span>
+            </button>
         </div>
         <div class="flex-1 w-full flex mb-2 bg-gradient-to-r from-green-400 to-blue-500">
             <div ref="editor" class="sm:mr-[1px] mt-[2px] h-full sm:w-1/2 sm:block w-full">
@@ -62,12 +65,12 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 auth.languageCode = "fr";
 const provider = new GoogleAuthProvider();
-const user = ref(null);
+let user = ref(null);
 
 onAuthStateChanged(auth, (user2) => {
     if (user2) {
         user.value = user2;
-        console.log("Logged in");
+        console.log("Logged in, uid: ", user.value.uid);
     } else {
         user.value = null;
         console.log("Logged out");
@@ -99,14 +102,17 @@ function logIn() {
 
 const database = getDatabase(app);
 
-function writeUserData(userId, name, email, imageUrl) {
+function writeUserData() {
     const db = getDatabase();
-    setdB(refdB(db, "users/" + userId), {
-        username: name,
-        email: email,
-        profile_picture: imageUrl,
+    setdB(refdB(db, "notes/" + user.value.uid), {
+        title: "my note",
+        text: text.value,
+    }).then(() => {
+        saved.value = true;
     });
 }
+
+const saved = ref(false);
 </script>
 
 <style>
@@ -129,5 +135,41 @@ function writeUserData(userId, name, email, imageUrl) {
 textarea {
     resize: none;
     outline: none;
+}
+
+.lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 40px;
+    height: 40px;
+}
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    margin: 4px;
+    border: 4px solid #fff;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>
