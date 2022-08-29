@@ -1,32 +1,43 @@
 <template>
-    <div class="bg-[#03061f] flex flex-col h-screen">
-        <div class="flex bg-[#03061f] justify-end content-center">
-            <button @click="toggle" class="sm:mr-8 sm:hidden bg-gradient-to-r from-green-400 to-blue-500 sm:hover:from-pink-500 sm:hover:to-yellow-500 text-white px-4 py-2 font-bold rounded-lg my-4">Switch views</button>
-
-            <div v-if="user">
-                <button @click="logOut" class="m-4 sm:mr-8 bg-red-800 text-white px-4 py-2 font-bold rounded-lg">Log out</button>
-            </div>
-            <div v-else>
-                <button @click="logIn" class="m-4 sm:mr-8 bg-red-800 text-white px-4 py-2 font-bold rounded-lg">Log in with Google</button>
+    <div class="drawer">
+        <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-content">
+            <div class="bg-[#03061f] flex flex-col h-screen">
+                <div class="flex bg-[#03061f] justify-between content-center p-4">
+                    <div class="text-white text-4xl">Scripta</div>
+                    <div v-if="user">
+                        <button @click="logOut" class="sm:mr-8 bg-red-800 text-white px-4 py-2 font-bold rounded-lg">Log out</button>
+                    </div>
+                    <div v-else>
+                        <button @click="logIn" class="sm:mr-8 bg-red-800 text-white px-4 py-2 font-bold rounded-lg">Log in with Google</button>
+                    </div>
+                </div>
+                <hr class="bg-gradient-to-r from-green-400 to-blue-500 h-[2px] border-0" />
+                <div class="flex justify-between py-2 my-4">
+                    <div class="flex content-center">
+                        <label for="my-drawer" class="drawer-button mx-4 my-auto"> <Drawer /></label>
+                        <input type="text" class="bg-transparent border-2 rounded-lg text-white text-lg p-2 w-auto" v-model="noteTitle" />
+                    </div>
+                    <Eye @click="toggle" class="my-auto mx-4 sm:hidden" />
+                    <!-- <button @click="writeUserData" class="mr-4 sm:mr-8 bg-gradient-to-r from-green-400 to-blue-500 sm:hover:from-pink-500 sm:hover:to-yellow-500 text-white px-4 py-2 font-bold rounded-lg">
+                        <span v-if="saved">Saved</span>
+                        <span v-else>Save</span>
+                    </button> -->
+                </div>
+                <div class="flex-1 w-full flex mb-2 bg-gradient-to-r from-green-400 to-blue-500">
+                    <Editor ref="editor"></Editor>
+                    <Render ref="render"></Render>
+                </div>
             </div>
         </div>
-        <div class="flex justify-between py-2">
-            <div class="flex content-center">
-                <Icon class="mx-4 my-auto"></Icon>
-                <div class="text-white text-xl my-auto">My note</div>
-            </div>
-            <button @click="writeUserData" class="mr-4 sm:mr-8 bg-gradient-to-r from-green-400 to-blue-500 sm:hover:from-pink-500 sm:hover:to-yellow-500 text-white px-4 py-2 font-bold rounded-lg">
-                <span v-if="saved">Saved</span>
-                <span v-else>Save</span>
-            </button>
-        </div>
-        <div class="flex-1 w-full flex mb-2 bg-gradient-to-r from-green-400 to-blue-500">
-            <div ref="editor" class="sm:mr-[1px] mt-[2px] h-full sm:w-1/2 sm:block w-full">
-                <textarea class="h-full w-full bg-[#03061f] text-white p-4 sm:p-16 text-base sm:text-lg overscroll-contain" v-model="text"></textarea>
-            </div>
-            <div ref="render" class="sm:ml-[1px] mt-[2px] h-full hidden sm:w-1/2 sm:block w-full">
-                <div class="bg-[#03061f] p-4 sm:p-16 prose prose-lg prose-invert max-w-none w-full h-full overscroll-contain" v-html="html"></div>
-            </div>
+        <div class="drawer-side">
+            <label for="my-drawer" class="drawer-overlay"></label>
+            <ul class="menu p-4 overflow-y-auto w-80 bg-[#03061f] text-white text-lg">
+                <Note class="w-24 h-24 mx-auto my-16" />
+                <!-- Sidebar content here -->
+                <li><a>My first note</a></li>
+                <li><a>Another saved note</a></li>
+            </ul>
         </div>
     </div>
 </template>
@@ -38,15 +49,14 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signO
 import { getDatabase, ref as refdB, set as setdB } from "firebase/database";
 
 // Markdown parse
-const text = ref("# Hello\n\nSome reasons why markdown is **awesome**:\n\n- easy to write,\n- easy to *style*.");
-const html = computed(() => {
-    return marked.parse(text.value);
-});
+const noteText = useState("text");
+noteText.value = "# Hello\n\nSome reasons why markdown is **awesome**:\n\n- easy to write,\n- easy to *style*.";
+const noteTitle = ref("My first note");
 const render = ref(null);
 const editor = ref(null);
 function toggle() {
-    editor.value.classList.toggle("hidden");
-    render.value.classList.toggle("hidden");
+    editor.value.$refs.editorDiv.classList.toggle("hidden");
+    render.value.$refs.renderDiv.classList.toggle("hidden");
 }
 
 const firebaseConfig = {
@@ -106,7 +116,7 @@ function writeUserData() {
     const db = getDatabase();
     setdB(refdB(db, "notes/" + user.value.uid), {
         title: "my note",
-        text: text.value,
+        text: noteText.value,
     }).then(() => {
         saved.value = true;
     });
@@ -134,6 +144,10 @@ const saved = ref(false);
 
 textarea {
     resize: none;
+    outline: none;
+}
+
+input {
     outline: none;
 }
 
