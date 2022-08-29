@@ -1,5 +1,5 @@
 {
-    "private": true,
+    "name": "Scripta",
     "scripts": {
         "build": "nuxt build",
         "dev": "nuxt dev",

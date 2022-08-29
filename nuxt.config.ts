@@ -12,7 +12,7 @@ export default defineNuxtConfig({
         source: './icon.png'
     },
     meta: {
-        /* meta options */
+        name: "Scripta"
     },
     manifest: {
         name: 'Scripta',

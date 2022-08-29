@@ -42,14 +42,13 @@
 </template>
 
 <script lang="ts" setup>
-import { marked } from "marked";
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { getDatabase, ref as refdB, set as setdB } from "firebase/database";
 
 // Markdown parse
-const noteText = useState("text");
-noteText.value = "# Hello\n\nSome reasons why markdown is **awesome**:\n\n- easy to write,\n- easy to *style*.";
+const text = useState("text");
+text.value = "# Hello\n\nSome reasons why markdown is **awesome**:\n\n- easy to write,\n- easy to *style*.";
 const noteTitle = ref("My first note");
 const render = ref(null);
 const editor = ref(null);
@@ -115,14 +114,21 @@ function logIn() {
 
 const database = getDatabase(app);
 
+// watch(text, () => {
+//     console.log("Write")
+//     writeUserData();
+// });
+
 function writeUserData() {
     const db = getDatabase();
-    setdB(refdB(db, "notes/" + user.value.uid), {
-        title: "my note",
-        text: noteText.value,
-    }).then(() => {
-        saved.value = true;
-    });
+    if (user.value) {
+        setdB(refdB(db, "notes/" + user.value.uid), {
+            title: "my note",
+            text: text.value,
+        }).then(() => {
+            saved.value = true;
+        });
+    }
 }
 
 const saved = ref(false);
