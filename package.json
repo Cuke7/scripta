@@ -7,6 +7,7 @@
         "preview": "nuxt preview"
     },
     "devDependencies": {
+        "@kevinmarrec/nuxt-pwa": "^0.4.2",
         "@nuxtjs/tailwindcss": "^5.3.2",
         "@tailwindcss/typography": "^0.5.4",
         "nuxt": "3.0.0-rc.8"

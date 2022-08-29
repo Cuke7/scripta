@@ -1,5 +1,5 @@
 <template>
-    <div ref="renderDiv" class="sm:ml-[1px] mt-[2px] h-full hidden sm:w-1/2 sm:block w-full">
+    <div ref="renderDiv" class="sm:ml-[1px] mt-[2px] h-full sm:w-1/2 sm:block w-full">
         <div class="bg-[#03061f] p-4 sm:p-16 prose prose-lg !prose-invert max-w-none w-full h-full overscroll-contain" v-html="html"></div>
     </div>
 </template>

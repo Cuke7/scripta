@@ -5,12 +5,8 @@
             <div class="bg-[#03061f] flex flex-col h-screen">
                 <div class="flex bg-[#03061f] justify-between content-center p-4">
                     <div class="text-white text-4xl">Scripta</div>
-                    <div v-if="user">
-                        <button @click="logOut" class="sm:mr-8 bg-red-800 text-white px-4 py-2 font-bold rounded-lg">Log out</button>
-                    </div>
-                    <div v-else>
-                        <button @click="logIn" class="sm:mr-8 bg-red-800 text-white px-4 py-2 font-bold rounded-lg">Log in with Google</button>
-                    </div>
+                    <img v-if="user" :src="user.photoURL" class="w-12 h-12 rounded-full" referrerpolicy="no-referrer" />
+                    <button v-else @click="logIn" class=""><User class="w-10 h-10" /></button>
                 </div>
                 <hr class="bg-gradient-to-r from-green-400 to-blue-500 h-[2px] border-0" />
                 <div class="flex justify-between py-2 my-4">
@@ -18,11 +14,12 @@
                         <label for="my-drawer" class="drawer-button mx-4 my-auto"> <Drawer /></label>
                         <input type="text" class="bg-transparent border-2 rounded-lg text-white text-lg p-2 w-auto" v-model="noteTitle" />
                     </div>
-                    <Eye @click="toggle" class="my-auto mx-4 sm:hidden" />
-                    <!-- <button @click="writeUserData" class="mr-4 sm:mr-8 bg-gradient-to-r from-green-400 to-blue-500 sm:hover:from-pink-500 sm:hover:to-yellow-500 text-white px-4 py-2 font-bold rounded-lg">
-                        <span v-if="saved">Saved</span>
-                        <span v-else>Save</span>
-                    </button> -->
+                    <div ref="pen" class="my-auto mx-4 sm:hidden">
+                        <Pen @click="toggle" />
+                    </div>
+                    <div ref="eye" class="hidden my-auto mx-4 sm:hidden">
+                        <Eye @click="toggle" />
+                    </div>
                 </div>
                 <div class="flex-1 w-full flex mb-[10px] bg-gradient-to-r from-green-400 to-blue-500">
                     <Editor ref="editor"></Editor>
@@ -32,11 +29,13 @@
         </div>
         <div class="drawer-side">
             <label for="my-drawer" class="drawer-overlay"></label>
-            <ul class="menu p-4 overflow-y-auto w-80 bg-[#03061f] text-white text-lg">
-                <Note class="w-24 h-24 mx-auto my-16" />
-                <!-- Sidebar content here -->
+            <ul class="menu p-4 overflow-y-auto w-80 bg-[#03061f] text-white text-base">
+                <Note class="w-24 h-24 mx-auto my-8" />
                 <li><a>My first note</a></li>
                 <li><a>Another saved note</a></li>
+                <li>
+                    <button @click="logOut" v-if="user" class="bg-red-800 rounded-lg text-white font-bold mt-20 mx-auto">Log out</button>
+                </li>
             </ul>
         </div>
     </div>
@@ -54,9 +53,13 @@ noteText.value = "# Hello\n\nSome reasons why markdown is **awesome**:\n\n- easy
 const noteTitle = ref("My first note");
 const render = ref(null);
 const editor = ref(null);
+const eye = ref(null);
+const pen = ref(null);
 function toggle() {
     editor.value.$refs.editorDiv.classList.toggle("hidden");
     render.value.$refs.renderDiv.classList.toggle("hidden");
+    eye.value.classList.toggle("hidden");
+    pen.value.classList.toggle("hidden");
 }
 
 const firebaseConfig = {
@@ -80,7 +83,7 @@ let user = ref(null);
 onAuthStateChanged(auth, (user2) => {
     if (user2) {
         user.value = user2;
-        console.log("Logged in, uid: ", user.value.uid);
+        console.log("Logged in, uid: ", user.value);
     } else {
         user.value = null;
         console.log("Logged out");
