@@ -24,7 +24,7 @@
                         <span v-else>Save</span>
                     </button> -->
                 </div>
-                <div class="flex-1 w-full flex mb-2 bg-gradient-to-r from-green-400 to-blue-500">
+                <div class="flex-1 w-full flex mb-[10px] bg-gradient-to-r from-green-400 to-blue-500">
                     <Editor ref="editor"></Editor>
                     <Render ref="render"></Render>
                 </div>
