@@ -1,23 +1,19 @@
 <template>
-    <div class="drawer">
+    <div class="drawer drawer-mobile">
         <input id="my-drawer" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content">
             <div class="bg-[#03061f] flex flex-col h-screen">
-                <div class="flex bg-[#03061f] justify-between content-center p-4">
-                    <div class="text-white text-4xl">Scripta</div>
-                    <img v-if="user" :src="user.photoURL" class="w-12 h-12 rounded-full" referrerpolicy="no-referrer" />
-                    <button v-else @click="logIn" class=""><User class="w-10 h-10" /></button>
-                </div>
-                <hr class="bg-gradient-to-r from-green-400 to-blue-500 h-[2px] border-0" />
-                <div class="flex justify-between py-2 my-4">
-                    <div class="flex content-center">
-                        <label for="my-drawer" class="drawer-button mx-4 my-auto"> <Drawer /></label>
-                        <input type="text" class="bg-transparent border-2 rounded-lg text-white text-lg p-2 w-auto" v-model="noteTitle" />
+                <div class="flex justify-between content-center p-4">
+                    <label for="my-drawer" class="drawer-button my-auto"> <Drawer /></label>
+                    <div class="text-white text-4xl my-auto">Scripta</div>
+                    <div class="flex bg-[#03061f] justify-between content-center">
+                        <img v-if="user" :src="user.photoURL" class="w-12 h-12 rounded-full" referrerpolicy="no-referrer" />
+                        <button v-else @click="logIn" class=""><User class="w-10 h-10" /></button>
                     </div>
-                    <div ref="pen" class="my-auto mx-4 sm:hidden">
+                    <div ref="pen" class="sm:hidden my-auto">
                         <Pen @click="toggle" />
                     </div>
-                    <div ref="eye" class="hidden my-auto mx-4 sm:hidden">
+                    <div ref="eye" class="hidden my-auto sm:hidden">
                         <Eye @click="toggle" />
                     </div>
                 </div>
@@ -49,7 +45,6 @@ import { getDatabase, ref as refdB, set as setdB } from "firebase/database";
 // Markdown parse
 const text = useState("text");
 text.value = "# Hello\n\nSome reasons why markdown is **awesome**:\n\n- easy to write,\n- easy to *style*.";
-const noteTitle = ref("My first note");
 const render = ref(null);
 const editor = ref(null);
 const eye = ref(null);
